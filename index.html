@@ -4,102 +4,58 @@
 <meta charset="UTF-8">
 <title>DDL Auto Peças</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-body{margin:0;font-family:Arial;background:#020617;color:#e5e7eb}
-header{padding:15px;border-bottom:1px solid #1e293b;text-align:center}
-button{padding:10px 15px;border:none;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px;padding:20px}
-.card{border:1px solid #1e293b;border-radius:10px;padding:15px}
-.price{color:#22c55e;font-weight:bold}
-.hidden{display:none}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h2>DDL Auto Peças</h2>
-  <div id="tipoEscolha">
-    <button onclick="setTipo('OFICINA')">Sou Oficina</button>
-    <button onclick="setTipo('CONSUMIDOR')">Sou Consumidor</button>
-  </div>
-  <div id="finalizarBox" class="hidden">
-    <button onclick="finalizar()">Finalizar Pedido</button>
-  </div>
-</header>
-
-<div class="grid" id="lista"></div>
-
-<script>
-const SUPABASE_URL = "COLE_SUA_URL_DO_SUPABASE_AQUI";
-const SUPABASE_KEY = "COLE_SUA_ANON_KEY_AQUI";
-
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let tipoCliente = null;
-let carrinho = [];
-
-function setTipo(tipo){
-  tipoCliente = tipo;
-  document.getElementById("tipoEscolha").style.display="none";
-  document.getElementById("finalizarBox").classList.remove("hidden");
-  carregarProdutos();
+:root{
+  --bg:#0b0f14;
+  --card:#151a21;
+  --primary:#2563eb;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
 }
 
-async function carregarProdutos(){
-  const { data } = await supabase
-    .from("produtos")
-    .select("*")
-    .eq("ativo", true)
-    .gt("estoque", 0);
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
+header{padding:16px;background:#020617;font-size:20px;font-weight:bold}
+section{padding:16px}
+h2{margin:0 0 12px 0}
 
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
-
-  data.forEach(p=>{
-    const preco = tipoCliente==="OFICINA" ? p.preco_oficina : p.preco_consumidor;
-    lista.innerHTML += `
-      <div class="card">
-        <strong>${p.nome}</strong>
-        <div class="price">R$ ${preco}</div>
-        <div>Estoque: ${p.estoque}</div>
-        <button onclick="add('${p.id}',${preco})">Adicionar</button>
-      </div>`;
-  });
+.categories, .featured{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:12px;
 }
 
-function add(id, preco){
-  carrinho.push({produto_id:id, preco});
-  alert("Produto adicionado");
+.card{
+  background:var(--card);
+  padding:14px;
+  border-radius:10px;
 }
 
-async function finalizar(){
-  if(carrinho.length===0){alert("Carrinho vazio");return;}
+.card small{color:var(--muted)}
 
-  let total = carrinho.reduce((s,i)=>s+i.preco,0);
-
-  const { data:pedido } = await supabase
-    .from("pedidos")
-    .insert([{ tipo_cliente: tipoCliente, total }])
-    .select()
-    .single();
-
-  for(const item of carrinho){
-    await supabase.from("itens_pedido").insert([{
-      pedido_id: pedido.id,
-      produto_id: item.produto_id,
-      quantidade: 1,
-      preco_unit: item.preco
-    }]);
-  }
-
-  window.open(
-    `https://wa.me/5599999999999?text=Pedido%20${pedido.id}%20Total%20R$${total}`,
-    "_blank"
-  );
+.product{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+  border-bottom:1px solid #1f2937;
+  padding-bottom:10px;
 }
-</script>
 
-</body>
-</html>
+.btn{
+  background:var(--primary);
+  color:white;
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#020617;
+  di
