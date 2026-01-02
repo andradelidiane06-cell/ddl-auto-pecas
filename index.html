@@ -6,56 +6,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-:root{
-  --bg:#0b0f14;
-  --card:#151a21;
-  --primary:#2563eb;
-  --text:#e5e7eb;
-  --muted:#9ca3af;
-}
-
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-body{margin:0;background:var(--bg);color:var(--text)}
+body{margin:0;font-family:Arial;background:#0b0f14;color:#e5e7eb}
+.center{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh}
+button{padding:14px 20px;margin:10px;font-size:16px;border:0;border-radius:8px;font-weight:bold}
+.oficina{background:#2563eb;color:#fff}
+.consumidor{background:#1f2937;color:#fff}
+.hidden{display:none}
 header{padding:16px;background:#020617;font-size:20px;font-weight:bold}
 section{padding:16px}
-h2{margin:0 0 12px 0}
+</style>
+</head>
 
-.categories, .featured{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-  gap:12px;
-}
+<body>
 
-.card{
-  background:var(--card);
-  padding:14px;
-  border-radius:10px;
-}
+<!-- TELA SELEÇÃO -->
+<div id="select" class="center">
+  <h2>Como deseja entrar?</h2>
+  <button class="oficina" onclick="entrar('oficina')">Sou Oficina</button>
+  <button class="consumidor" onclick="entrar('consumidor')">Sou Consumidor</button>
+</div>
 
-.card small{color:var(--muted)}
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>DDL AUTO PEÇAS</header>
+  <section>
+    <h3 id="perfil"></h3>
+    <p>Catálogo carregado com sucesso.</p>
+    <a href="https://wa.me/5511967215043" style="color:#2563eb;font-weight:bold">
+      Pedir no WhatsApp
+    </a>
+  </section>
+</div>
 
-.product{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-  border-bottom:1px solid #1f2937;
-  padding-bottom:10px;
-}
+<script>
+function entrar(tipo){
+  localStorage.setItem("perfil", tipo);
+  document.getElementById("select").style.display="none";
+  document.getElementById("app").classList.remove("hidden");
 
-.btn{
-  background:var(--primary);
-  color:white;
-  padding:10px 14px;
-  border-radius:8px;
-  text-decoration:none;
-  font-weight:bold;
-}
-
-footer{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#020617;
-  di
+  document.getElementById("perfil").innerText =
+    tipo === "oficina"
+    ? "Perfil: OFICINA (B2B)
